@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #include "EventManager.h"
 #include "Renderer.h"
 
@@ -18,3 +19,5 @@ int main() {
 	EventManager::terminateProgram();
 	return 0;
 }
+
+>>>>>>> master
