@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 #include "EventManager.h"
 #include "Renderer.h"
 
@@ -20,4 +20,4 @@ int main() {
 	return 0;
 }
 
->>>>>>> master
+
