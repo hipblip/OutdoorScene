@@ -1,4 +1,4 @@
-
+#include <stdlib.h>
 #include <stdio.h>
 #include <string>
 #include <iostream>
@@ -15,7 +15,11 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 GLFWwindow* Renderer::window = NULL;
+std::vector<GLuint> Renderer::shaderProgramID;
+GLuint Renderer::currentShader;
 
+/* Initializes Glew, sets the color of the background, activates the depth test and loads the shaders into the vector of programID's 
+ */
 void Renderer::setUp() {
 	window = EventManager::getWindow();
 	glfwMakeContextCurrent(window);
@@ -28,7 +32,7 @@ void Renderer::setUp() {
 	}
 
 	// Black background
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glClearColor(0.0f, 0.0f, 0.5f, 0.0f);
 	
 	// Enable depth test
     glEnable(GL_DEPTH_TEST);
@@ -37,19 +41,56 @@ void Renderer::setUp() {
     glDepthFunc(GL_LESS); 
 
 	//Load the shaders
+	//shaderProgramID.push_back(LoadShaders("Shaders/Phong.vertexshader", "Shaders/Phong.fragmentshader"));
+	
+	Renderer::shaderProgramID.push_back(LoadShaders("Shaders/Phong.vertexshader", "Shaders/Phong.fragmentshader"));
+	currentShader = 0;
 }
 
-// Nullifies the window, 
+/* This function sets the current shader being used in the the program
+ * @param the position of the required shader within the vector of saders
+ * @return void
+ */
+void Renderer::setShader(GLuint value) {
+	if (value > (shaderProgramID.size() - 1) || value < 0) {
+		std::cout << "Invalid shader ID\n";
+	} else {
+		currentShader = value;
+	}
+}
+
+/* A simple getter for the shader
+ * @param void
+ * @return the current shader
+ */
+GLuint Renderer::getShader() {
+	return shaderProgramID[currentShader];
+}
+
+/* Deletes the entries in the vector of shaders and nullifies the window variable.  This is called at the end of the program when the user exits.
+ * @param void
+ * @return void
+ */
 void Renderer::terminateProgram() {
 	window = NULL;
+	for (std::vector<GLuint>::iterator it = shaderProgramID.begin(); it < shaderProgramID.end(); it++) {
+		glDeleteProgram(*it);
+	}
+	shaderProgramID.clear();
 }
 
-// Called at the end of the frame
+/* Clears the color and depth buffers.  This is called at the beginning of every frame.
+ * @param void
+ * @return void
+ */
 void Renderer::beginFrame() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-// Called at the end of the frame
+/* Swaps the buffers.  Called at the end of every frame.
+ * @param void
+ * @return void
+ */
 void Renderer::endFrame() {
 	glfwSwapBuffers(window);
 }
