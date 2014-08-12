@@ -1,6 +1,15 @@
 #version 330 core
 
+vec4 materialCoefficients; // x: ambient   y: diffuse   z: specular   w: specular exponent
+
+vec3 lightColor;
+vec3 lightAttenuation; // x: kC  y: kL  z: kQ
+
+in vec3 normal;
+in vec3 eyeVector;
+in vec4 lightVector;
 in vec3 v_color;
+
 out vec3 color;
 
 void main() {
