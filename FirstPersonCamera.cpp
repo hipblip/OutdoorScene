@@ -19,13 +19,24 @@
 
 using namespace glm;
 
-FirstPersonCamera::FirstPersonCamera(glm::vec3 position) :  Camera(), mPosition(position), mLookAt(0.0f, 0.0f, -1.0f), mHorizontalAngle(90.0f), mVerticalAngle(0.0f), mSpeed(5.0f), mAngularSpeed(25.0f), jumpFlag(false), jumpTime(0.0f)
+FirstPersonCamera::FirstPersonCamera(glm::vec3 position) :  Camera(), mPosition(position), mLookAt(0.0f, 0.0f, -1.0f), mHorizontalAngle(90.0f), mVerticalAngle(0.0f), mSpeed(5.0f), mAngularSpeed(25.0f), jumpFlag(false), jumpTime(0.0f), camRadius(0.5f)
 {
+	
 }
 
 FirstPersonCamera::~FirstPersonCamera()
 {
 }
+
+//Checks camera for collision against an infinite pillar running through the Y-Axis, be that there is only 1 level to our system, this is the quickest way to check collision for collumn like shapes
+bool FirstPersonCamera::CheckPillarCollision() const
+{					//XZ pillar position							//Pillar Radius
+		if(length(vec3(0,mPosition.y,-5) - mPosition) <= (camRadius + 1.0f)){
+			return true;
+		}
+	return false;
+}
+
 
 //All functions of the camera are held here
 void FirstPersonCamera::Update(float dt)
@@ -100,25 +111,50 @@ void FirstPersonCamera::Update(float dt)
 	}
 
 	// A S D W for motion along the XZ Plane, Y cordinate will be handled by Jump feature
+	//Forward Movement
+	//Run Only available with forward movement
 	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_W ) == GLFW_PRESS)
 	{
+		//Movement and modifiers
 		mPosition += normalize(vec3(mLookAt.x, 0, mLookAt.z)) * dt * mSpeed * runSpeed * angleReductionSpeed * doubleKeyAdjust;
+		//Collision check testing
+		if(CheckPillarCollision() || mPosition.x <= -50.0f || mPosition.x >= 50.0f || mPosition.z <= -50.0f || mPosition.z >= 50.0f){
+		mPosition -= normalize(vec3(mLookAt.x, 0, mLookAt.z)) * dt * mSpeed * runSpeed * angleReductionSpeed * doubleKeyAdjust;
+		}
 	}
 
-	//Run not available when backing up
+	//Backward Movement
 	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_S ) == GLFW_PRESS)
 	{
+		//Movement and modifiers
 		mPosition -= normalize(vec3(mLookAt.x, 0, mLookAt.z)) * dt * mSpeed * angleReductionSpeed * doubleKeyAdjust;
+		//Collision check testing
+		if(CheckPillarCollision() || mPosition.x <= -50.0f || mPosition.x >= 50.0f || mPosition.z <= -50.0f || mPosition.z >= 50.0f){
+		mPosition += normalize(vec3(mLookAt.x, 0, mLookAt.z)) * dt * mSpeed * angleReductionSpeed * doubleKeyAdjust;
+		}
+		
 	}
 
+	//Right Strafe movement
 	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_D ) == GLFW_PRESS)
 	{
-		mPosition += normalize(vec3(sideVector.x, 0, sideVector.z)) * dt * mSpeed * runSpeed * angleReductionSpeed * doubleKeyAdjust;
+		//Movement and modifiers
+		mPosition += normalize(vec3(sideVector.x, 0, sideVector.z)) * dt * mSpeed * angleReductionSpeed * doubleKeyAdjust;
+		//Collision check testing
+		if(CheckPillarCollision() || mPosition.x <= -50.0f || mPosition.x >= 50.0f || mPosition.z <= -50.0f || mPosition.z >= 50.0f){
+		mPosition -= normalize(vec3(sideVector.x, 0, sideVector.z)) * dt * mSpeed * angleReductionSpeed * doubleKeyAdjust;
+		}
 	}
 
+	//Left Strafe movement
 	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_A ) == GLFW_PRESS)
 	{
-		mPosition -= normalize(vec3(sideVector.x, 0, sideVector.z)) * dt * mSpeed * runSpeed * angleReductionSpeed * doubleKeyAdjust;
+		//Movement and modifiers
+		mPosition -= normalize(vec3(sideVector.x, 0, sideVector.z)) * dt * mSpeed * angleReductionSpeed * doubleKeyAdjust;
+		//Collision check testing
+		if(CheckPillarCollision() || mPosition.x <= -50.0f || mPosition.x >= 50.0f || mPosition.z <= -50.0f || mPosition.z >= 50.0f){
+		mPosition += normalize(vec3(sideVector.x, 0, sideVector.z)) * dt * mSpeed * angleReductionSpeed * doubleKeyAdjust;
+		}
 	}
 
 	//Jump feature, checks to ensure the camera is on the ground before being able to start the jump, then increases y value over time, hitting a peak then decreasing back to the floor value
@@ -140,6 +176,11 @@ void FirstPersonCamera::Update(float dt)
 	}
 
 
+}
+
+//Returns lookAt vector so that the particle system to allign the billboards
+glm::vec3 FirstPersonCamera::GetLookAt() const{
+	return mLookAt;
 }
 
 //Taken From Assignment 1

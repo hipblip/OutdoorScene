@@ -24,7 +24,9 @@ public:
 
 	virtual glm::vec3 GetPosition() const;
 
-	//virtual double findNoise();
+	virtual glm::vec3 GetLookAt() const;
+
+	virtual bool CheckPillarCollision() const;
 
 private:
 	// @TODO 3 - Add every parameter you need for a first person camera
@@ -44,6 +46,9 @@ private:
 	float doubleKeyAdjust;		//Lowers speed when moving diagnoly to avoid faster movement through this form of movement
 	bool jumpFlag;				//Flag to alert at what point the jump feature is at. False = on the ground, True = in the air
 	float jumpTime;				//Time being calculated as of the initiation of the jump
+	float camRadius;
+
+	
 
 	glm::vec3 mLookAt;
 };

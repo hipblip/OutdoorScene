@@ -1,20 +1,33 @@
+//
+// COMP 371 Assignment Framework
+//
+// Created by Nicolas Bergeron on 8/7/14.
+//
+// Copyright (c) 2014 Concordia University. All rights reserved.
+//
+
 #pragma once
-#include <glm/gtc/matrix_transform.hpp>
 
-class StaticCamera {
+#include "Camera.h"
 
+
+class StaticCamera : public Camera
+{
 public:
 	StaticCamera(glm::vec3 position, glm::vec3 lookAtPoint, glm::vec3 upVector);
-	~StaticCamera();
+	virtual ~StaticCamera();
 
-	void Update(float dt);
+	virtual void Update(float dt);
 
-	glm::mat4 GetViewMatrix() const;
-	glm::mat4 GetProjectionMatrix() const;
-	glm::mat4 GetViewProjectionMatrix() const;
+	virtual glm::mat4 GetViewMatrix() const;
+
+	virtual glm::vec3 GetLookAt() const;
 
 private:
 	glm::vec3 mPosition;
 	glm::vec3 mLookAtPoint;
 	glm::vec3 mUpVector;
+	float movement;
+	float modifier;
+	float radius;
 };
