@@ -1,0 +1,17 @@
+#version 330
+
+smooth in vec3 thePosition;
+smooth in vec2 UVcoords;
+smooth in vec4 EyeCoordinates;
+smooth in vec3 outNormal;
+
+out vec4 outputColor;
+
+uniform sampler2D myTextureSampler;
+
+void main()
+{
+	
+	//outputColor = vec4(0.0, thePosition.y/12.0, 0.0, 1.0);
+	outputColor = texture(myTextureSampler, UVcoords);
+}

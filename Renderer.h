@@ -26,6 +26,8 @@ public:
 
 	static GLuint getShader();
 	static void setShader(GLuint value);
+
+	static GLuint getShaderVectorPosition() { return currentShader; };
 private:
 	static GLFWwindow* window;
 

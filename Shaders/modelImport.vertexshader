@@ -1,11 +1,5 @@
 #version 330 core
 
-/*
-out vec3 v_color;
-
-void main() {
-	v_color = vec3( 0, 1, 0 );*/
-
 layout(location = 0) in vec3 vertex;
 layout(location = 1) in vec2 UV;
 layout(location = 2) in vec3 normal;
@@ -17,9 +11,9 @@ layout(location = 3) in vec3 color;
 //in vec3 color;
 //in vec2 UV;
 
-//out vec3 outNormal;
+out vec3 outNormal;
 //out vec3 outTangent;
-//out vec3 outColor;
+out vec3 outColor;
 out vec2 outUV;
 
 // Uniform
@@ -37,10 +31,9 @@ void main()
 
 	gl_Position = MVP * vec4(vertex,1.0);
 
-	//outNormal = (normalTransform * vec4(normal, 0.0f)).xyz;
+	outNormal = (normalTransform * vec4(normal, 0.0f)).xyz;
 	//outTangent = (normalTransform * vec4(tangent, 0.0f)).xyz;
-	//outColor=color;
+	outColor=color;
 	
 	outUV = UV;
-
 }

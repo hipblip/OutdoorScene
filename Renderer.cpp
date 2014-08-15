@@ -43,7 +43,13 @@ void Renderer::setUp() {
 	//Load the shaders
 	//shaderProgramID.push_back(LoadShaders("Shaders/Phong.vertexshader", "Shaders/Phong.fragmentshader"));
 	
-	Renderer::shaderProgramID.push_back(LoadShaders("Shaders/Phong.vertexshader", "Shaders/Phong.fragmentshader"));
+
+	/*Renderer::shaderProgramID.push_back(LoadShaders("Shaders/Phong.vertexshader", "Shaders/Phong.fragmentshader"));*/
+
+	Renderer::shaderProgramID.push_back(LoadShaders("Shaders/modelImport.vertexshader", "Shaders/modelImport.fragmentshader"));	 // index 0
+	Renderer::shaderProgramID.push_back(LoadShaders("Shaders/SolidColor.vertexshader","Shaders/SolidColor.fragmentshader"));	 // index 1
+	Renderer::shaderProgramID.push_back(LoadShaders("Shaders/groundShader.vertexshader","Shaders/groundShader.fragmentshader")); // index 2
+
 	currentShader = 0;
 }
 
