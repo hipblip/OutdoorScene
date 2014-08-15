@@ -5,6 +5,7 @@
 // Include standard headers
 #include <stdio.h>
 #include <stdlib.h>
+#include <iostream>
 
 // Include GLEW - OpenGL Extension Wrangler
 //#define GLEW_STATIC
@@ -42,6 +43,7 @@ void EventManager::setUp() {
 	if( !glfwInit() )
 	{
 		fprintf( stderr, "Failed to initialize GLFW\n" );
+		std::cout << "asdf\n";
 		exit(-1);
 	}
 
