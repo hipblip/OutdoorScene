@@ -69,3 +69,8 @@ glm::mat4 StaticCamera::GetViewMatrix() const
 glm::vec3 StaticCamera::GetLookAt() const{
 	return mLookAtPoint;
 }
+
+//Returns position vector so that the particle system to allign the billboards
+glm::vec3 StaticCamera::GetPosition() const{
+	return mPosition;
+}

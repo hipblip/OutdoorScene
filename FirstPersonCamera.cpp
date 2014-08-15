@@ -37,6 +37,26 @@ bool FirstPersonCamera::CheckPillarCollision() const
 	return false;
 }
 
+//Checks camera for collision against another Sphere
+bool FirstPersonCamera::CheckSphereCollision() const
+{					//XZ Sphere position					//Sphere Radius
+		if(length(vec3(0, 0,-5) - mPosition) <= (camRadius + 1.0f)){
+			return true;
+		}
+	return false;
+}
+
+
+//Checks for Cube collisions. Sends points in 4 directions around the camera (along the XZ plane) at the edge of the cameras bounding sphere to scan for collisions
+//Will be layered so that it envelops 2d walls in its volume with a distance of .5 off the walls (cams radius)
+bool FirstPersonCamera::CheckSquareCollision() const
+{					//XZ pillar position							//MinMax of Cordinates for the face
+		if (mPosition.x <= 5 && mPosition.x >= -5  && mPosition.y <= 4  && mPosition.y >= 0 && mPosition.z <= 4  && mPosition.z >= 2 ){
+			return true;
+		}
+	return false;
+}
+
 
 //All functions of the camera are held here
 void FirstPersonCamera::Update(float dt)
@@ -118,7 +138,7 @@ void FirstPersonCamera::Update(float dt)
 		//Movement and modifiers
 		mPosition += normalize(vec3(mLookAt.x, 0, mLookAt.z)) * dt * mSpeed * runSpeed * angleReductionSpeed * doubleKeyAdjust;
 		//Collision check testing
-		if(CheckPillarCollision() || mPosition.x <= -50.0f || mPosition.x >= 50.0f || mPosition.z <= -50.0f || mPosition.z >= 50.0f){
+		if(CheckPillarCollision() || mPosition.x <= -50.0f || mPosition.x >= 50.0f || mPosition.z <= -50.0f || mPosition.z >= 50.0f || CheckSquareCollision()){
 		mPosition -= normalize(vec3(mLookAt.x, 0, mLookAt.z)) * dt * mSpeed * runSpeed * angleReductionSpeed * doubleKeyAdjust;
 		}
 	}
@@ -129,7 +149,7 @@ void FirstPersonCamera::Update(float dt)
 		//Movement and modifiers
 		mPosition -= normalize(vec3(mLookAt.x, 0, mLookAt.z)) * dt * mSpeed * angleReductionSpeed * doubleKeyAdjust;
 		//Collision check testing
-		if(CheckPillarCollision() || mPosition.x <= -50.0f || mPosition.x >= 50.0f || mPosition.z <= -50.0f || mPosition.z >= 50.0f){
+		if(CheckPillarCollision() || mPosition.x <= -50.0f || mPosition.x >= 50.0f || mPosition.z <= -50.0f || mPosition.z >= 50.0f || CheckSquareCollision()){
 		mPosition += normalize(vec3(mLookAt.x, 0, mLookAt.z)) * dt * mSpeed * angleReductionSpeed * doubleKeyAdjust;
 		}
 		
@@ -141,7 +161,7 @@ void FirstPersonCamera::Update(float dt)
 		//Movement and modifiers
 		mPosition += normalize(vec3(sideVector.x, 0, sideVector.z)) * dt * mSpeed * angleReductionSpeed * doubleKeyAdjust;
 		//Collision check testing
-		if(CheckPillarCollision() || mPosition.x <= -50.0f || mPosition.x >= 50.0f || mPosition.z <= -50.0f || mPosition.z >= 50.0f){
+		if(CheckPillarCollision() || mPosition.x <= -50.0f || mPosition.x >= 50.0f || mPosition.z <= -50.0f || mPosition.z >= 50.0f || CheckSquareCollision()){
 		mPosition -= normalize(vec3(sideVector.x, 0, sideVector.z)) * dt * mSpeed * angleReductionSpeed * doubleKeyAdjust;
 		}
 	}
@@ -152,7 +172,7 @@ void FirstPersonCamera::Update(float dt)
 		//Movement and modifiers
 		mPosition -= normalize(vec3(sideVector.x, 0, sideVector.z)) * dt * mSpeed * angleReductionSpeed * doubleKeyAdjust;
 		//Collision check testing
-		if(CheckPillarCollision() || mPosition.x <= -50.0f || mPosition.x >= 50.0f || mPosition.z <= -50.0f || mPosition.z >= 50.0f){
+		if(CheckPillarCollision() || mPosition.x <= -50.0f || mPosition.x >= 50.0f || mPosition.z <= -50.0f || mPosition.z >= 50.0f || CheckSquareCollision()){
 		mPosition += normalize(vec3(sideVector.x, 0, sideVector.z)) * dt * mSpeed * angleReductionSpeed * doubleKeyAdjust;
 		}
 	}

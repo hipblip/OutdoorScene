@@ -28,6 +28,10 @@ public:
 
 	virtual bool CheckPillarCollision() const;
 
+	virtual bool CheckSphereCollision() const;
+
+	virtual bool CheckSquareCollision() const;
+
 private:
 	// @TODO 3 - Add every parameter you need for a first person camera
 	//           including the speed of the camera

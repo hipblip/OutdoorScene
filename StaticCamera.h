@@ -23,6 +23,8 @@ public:
 
 	virtual glm::vec3 GetLookAt() const;
 
+	virtual glm::vec3 GetPosition() const;
+
 private:
 	glm::vec3 mPosition;
 	glm::vec3 mLookAtPoint;
