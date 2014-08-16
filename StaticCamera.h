@@ -5,6 +5,7 @@
 //
 // Copyright (c) 2014 Concordia University. All rights reserved.
 //
+//Modifications to this document performed by David Paparo ID# 6664334
 
 #pragma once
 
@@ -29,6 +30,8 @@ private:
 	glm::vec3 mPosition;
 	glm::vec3 mLookAtPoint;
 	glm::vec3 mUpVector;
+
+	//Added Atributes
 	float movement;
 	float modifier;
 	float radius;

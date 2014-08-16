@@ -5,7 +5,6 @@
 //
 // Copyright (c) 2014 Concordia University. All rights reserved.
 //
-//
 //Modifications to this document performed by David Paparo ID# 6664334
 
 #pragma once
@@ -37,6 +36,7 @@ private:
 	//           including the speed of the camera
 
 	//Assignment 1 original variables
+	glm::vec3 mLookAt;
 	glm::vec3 mPosition;	
 	float mHorizontalAngle;		// horizontal angle
 	float mVerticalAngle;		// vertical angle
@@ -50,9 +50,8 @@ private:
 	float doubleKeyAdjust;		//Lowers speed when moving diagnoly to avoid faster movement through this form of movement
 	bool jumpFlag;				//Flag to alert at what point the jump feature is at. False = on the ground, True = in the air
 	float jumpTime;				//Time being calculated as of the initiation of the jump
-	float camRadius;
+	float camRadius;			//Distance maitained by the camera when dealing with circular objects
+	float headBob;				//Maitains time of movement in order to generate the headbob
 
 	
-
-	glm::vec3 mLookAt;
 };

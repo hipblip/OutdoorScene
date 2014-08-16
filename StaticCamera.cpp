@@ -5,6 +5,7 @@
 //
 // Copyright (c) 2014 Concordia University. All rights reserved.
 //
+//Modifications to this document performed by David Paparo ID# 6664334
 
 #include "StaticCamera.h"
 #include <glm/gtc/matrix_transform.hpp>
