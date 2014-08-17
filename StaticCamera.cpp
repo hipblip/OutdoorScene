@@ -30,13 +30,15 @@ void StaticCamera::Update(float dt)
 	//Speed up movement
 	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_W ) == GLFW_PRESS)
 	{
-		modifier = 2.0f;
+		if(modifier <= 2.0f)	
+			modifier += 10.0f * dt;
 	}
 
-	//Slow Movement
+	//Slow down movement
 	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_S ) == GLFW_PRESS)
 	{
-		modifier = 0.5f;
+		if(modifier >= -2.0f)
+			modifier -= 10.0f * dt;
 	}
 
 	//Normal Movement

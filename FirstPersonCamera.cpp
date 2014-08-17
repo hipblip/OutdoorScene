@@ -93,22 +93,22 @@ void FirstPersonCamera::Update(float dt)
 
 	//Adjustement based on your lookAt pitch, to simulate the inability to move quickly as you stare higher up
 	//20 degree angle will begin to cut walk speed, 45 and higher will reduce speed even further
-	pitchRadians = asin(mLookAt.y);
-	if(pitchRadians >= 0.349)
+	pitchRadians = asin((mLookAt.y));
+	if(pitchRadians >= 0.2)
 	{
 		angleReductionSpeed = 0.75f;
 	}
-	if(pitchRadians >= 0.785)
+	if(pitchRadians >= 0.4)
 	{
 		angleReductionSpeed = 0.5f;
 	}
-	if(pitchRadians <= 0.349)
+	if(pitchRadians <= 0.2)
 	{
 		angleReductionSpeed = 1.0f;
 	}
 
 	//RunSpeed, to allow an increase should it be needed, runfunction is disabled should lookAt angle exceed 45 degrees
-	if(glfwGetKey(EventManager::GetWindow(), GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS && pitchRadians <= 0.785)
+	if(glfwGetKey(EventManager::GetWindow(), GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS && pitchRadians <= 0.4)
 	{
 		runSpeed = 2.5f;
 	}
@@ -139,20 +139,28 @@ void FirstPersonCamera::Update(float dt)
 		mPosition += normalize(vec3(mLookAt.x, 0, mLookAt.z)) * dt * mSpeed * runSpeed * angleReductionSpeed * doubleKeyAdjust;
 
 		//Y-Position Adjustment, based on ground height, offset, and headbob. Disabled on Jump.
-		if(!jumpFlag){
-			if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_LEFT_SHIFT ) == GLFW_RELEASE){
+		if(!jumpFlag && !(glfwGetKey(EventManager::GetWindow(), GLFW_KEY_S ) == GLFW_PRESS) ){
+			if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_LEFT_SHIFT ) == GLFW_RELEASE || pitchRadians >= 0.4){
 				headBob += dt;
 				mPosition.y = 3 + 0.15f*sin(10.0f * headBob);
+				mPosition += normalize(vec3(sideVector.x, 0, sideVector.z)) * 0.0015f*sin(5.0f * headBob);
 			}
 			else{
 				headBob += dt;
 				mPosition.y = 3 + 0.15f*sin(15.0f * headBob);
+				mPosition += normalize(vec3(sideVector.x, 0, sideVector.z)) * 0.0030f*sin(7.5f * headBob);
 			}
 		}
 
 		//Collision check testing
 		if(CheckPillarCollision() || mPosition.x <= -50.0f || mPosition.x >= 50.0f || mPosition.z <= -50.0f || mPosition.z >= 50.0f || CheckSquareCollision()){
-			mPosition -= normalize(vec3(mLookAt.x, 0, mLookAt.z)) * dt * mSpeed * runSpeed * angleReductionSpeed * doubleKeyAdjust;
+			mPosition -= normalize(vec3(mLookAt.x, 0, mLookAt.z)) * dt * mSpeed * runSpeed * angleReductionSpeed * doubleKeyAdjust;//disables key motion
+			if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_LEFT_SHIFT ) == GLFW_RELEASE){
+				mPosition -= normalize(vec3(sideVector.x, 0, sideVector.z)) * 0.0015f*sin(5.0f * headBob);//disables left to right motion for walk
+			}
+			else{
+				mPosition -= normalize(vec3(sideVector.x, 0, sideVector.z)) * 0.0030f*sin(7.5f * headBob);//disables left to right motion for run
+			}
 		}
 	}
 
@@ -163,14 +171,16 @@ void FirstPersonCamera::Update(float dt)
 		mPosition -= normalize(vec3(mLookAt.x, 0, mLookAt.z)) * dt * mSpeed * angleReductionSpeed * doubleKeyAdjust;
 
 		//Y-Position Adjustment, based on ground height, offset, and headbob. Disabled on Jump.
-		if(!jumpFlag){
+		if(!jumpFlag && !(glfwGetKey(EventManager::GetWindow(), GLFW_KEY_W ) == GLFW_PRESS)){
 			headBob += dt;
 			mPosition.y = 3 + 0.15f*sin(10.0f * headBob);
+			mPosition += normalize(vec3(sideVector.x, 0, sideVector.z)) * 0.0015f*sin(5.0f * headBob); //Left to right motion
 		}
 
 		//Collision check testing
 		if(CheckPillarCollision() || mPosition.x <= -50.0f || mPosition.x >= 50.0f || mPosition.z <= -50.0f || mPosition.z >= 50.0f || CheckSquareCollision()){
-			mPosition += normalize(vec3(mLookAt.x, 0, mLookAt.z)) * dt * mSpeed * angleReductionSpeed * doubleKeyAdjust;
+			mPosition += normalize(vec3(mLookAt.x, 0, mLookAt.z)) * dt * mSpeed * angleReductionSpeed * doubleKeyAdjust; //disables key motion
+			mPosition -= normalize(vec3(sideVector.x, 0, sideVector.z)) * 0.0015f*sin(5.0f * headBob); //disables left to right motion
 		}
 		
 	}
@@ -182,7 +192,7 @@ void FirstPersonCamera::Update(float dt)
 		mPosition += normalize(vec3(sideVector.x, 0, sideVector.z)) * dt * mSpeed * angleReductionSpeed * doubleKeyAdjust;
 
 		//Y-Position Adjustment, based on ground height, offset, and headbob. Disabled if front or back movement are already in use. Disabled on Jump.
-		if(!jumpFlag){
+		if(!jumpFlag  && !(glfwGetKey(EventManager::GetWindow(), GLFW_KEY_A ) == GLFW_PRESS)){
 			if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_W ) == GLFW_RELEASE && glfwGetKey(EventManager::GetWindow(), GLFW_KEY_S ) == GLFW_RELEASE){
 				headBob += dt;
 				mPosition.y = 3 + 0.15f*sin(10.0f * headBob);
@@ -202,7 +212,7 @@ void FirstPersonCamera::Update(float dt)
 		mPosition -= normalize(vec3(sideVector.x, 0, sideVector.z)) * dt * mSpeed * angleReductionSpeed * doubleKeyAdjust;
 
 		//Y-Position Adjustment, based on ground height, offset, and headbob. Disabled if front or back movement are already in use. Disabled on Jump.
-		if(!jumpFlag){
+		if(!jumpFlag && !(glfwGetKey(EventManager::GetWindow(), GLFW_KEY_D ) == GLFW_PRESS)){
 			if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_W ) == GLFW_RELEASE && glfwGetKey(EventManager::GetWindow(), GLFW_KEY_S ) == GLFW_RELEASE){
 				headBob += dt;
 				mPosition.y = 3 + 0.15f*sin(10.0f * headBob);
@@ -224,7 +234,7 @@ void FirstPersonCamera::Update(float dt)
 	//Y increase taken through trial and error, what was felt to be best fit to not be too straineous on the eyes
 	if (jumpFlag == true){
 		jumpTime += dt;
-		mPosition += (vec3(0, 0.7f, 0) * jumpTime) - ((vec3(0, 4.9f, 0) * jumpTime * jumpTime * 0.5f));
+		mPosition += (vec3(0, 0.2f, 0) * jumpTime) - ((vec3(0, 1.1f, 0) * jumpTime * jumpTime * 0.5f));
 	
 		//To be changed to relfect position on floor
 		if(mPosition.y <= (3 + 0.15f*sin(10.0f * headBob))){
