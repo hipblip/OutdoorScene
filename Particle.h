@@ -2,20 +2,20 @@
 
 #include <glm\glm.hpp>
 
-using namespace glm;
-
 struct Particle{
-	vec3 position;
-	vec3 movement;
-	vec4 color;
-	float size;
-	float rotation;
-	float age;
-	float lifetime;
-	float cameraDistance;
+
+	glm::vec3 position; 
+	glm::vec3 velocity;
+	unsigned char r,g,b,a; // Color
+	float size; 
+	float angle;
+	float weight;
+	float life; // Remaining life of the particle. if <0 : dead and unused.
+	float cameradistance; // *Squared* distance to the camera. if dead : -1.0f
 
 	bool operator<(const Particle& that) const {
 		// Sort in reverse order : far particles drawn first.
-		return this->cameraDistance > that.cameraDistance;
+		return this->cameradistance > that.cameradistance;
 	}
 };
+
