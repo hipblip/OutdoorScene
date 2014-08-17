@@ -10,11 +10,11 @@
 
 using namespace glm;
 
-class FireEffect{
+class FireSmokeEffect{
 public:
-	FireEffect(){}
-	FireEffect(Camera* cam);
-	~FireEffect();
+	FireSmokeEffect(){}
+	FireSmokeEffect(Camera* cam);
+	~FireSmokeEffect();
 
 	void Update(float dt);
 	void Draw();
@@ -22,8 +22,8 @@ public:
 	void SortParticles();
 	int  FindUnusedParticle();
 
-	Particle EmitFireParticle(Particle p);
-	Particle UpdateFireParticle(Particle p, float dt);
+	Particle EmitFireSmokeParticle(Particle p);
+	Particle UpdateFireSmokeParticle(Particle p, float dt);
 
 private:
 
@@ -34,7 +34,7 @@ private:
 
 	GLfloat*				mPositionSizeData;
 	GLubyte*				mColorData;
-
+	
 	unsigned int			mVertexArrayID;
 	GLuint					mVertexBuffer;
 	GLuint					mPositionBuffer;
