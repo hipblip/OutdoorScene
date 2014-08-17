@@ -22,6 +22,8 @@ public:
 	void SortParticles();
 	int  FindUnusedParticle();
 
+	Particle EmitRainParticle(Particle p);
+	Particle UpdateRainParticle(Particle p, float dt);
 
 private:
 

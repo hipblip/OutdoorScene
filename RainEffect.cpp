@@ -61,29 +61,9 @@ void RainEffect::Update(float dt){
 			newparticles = (int)(0.016f*700);
 		
 	for(int i=0; i<newparticles; i++){
-			int particleIndex = FindUnusedParticle();
-			mParticlesContainer[particleIndex].life = 5.0f; // This particle will live 5 seconds.
-			mParticlesContainer[particleIndex].position = mCamera->GetCameraPosition() + glm::vec3(0,20,-2.0f);
-
-			float spread = 10.5f;
-			
-			glm::vec3 maindir = glm::vec3(0.0f, -1.0f, 0.0f);
-			
-			glm::vec3 randomdir = glm::vec3(
-				(rand()%2000 - 1000.0f)/1000.0f,
-				(rand()%2000 - 1000.0f)/1000.0f,
-				(rand()%2000 - 1000.0f)/1000.0f
-				);
-
-			mParticlesContainer[particleIndex].velocity = maindir + randomdir*spread;
-
-			mParticlesContainer[particleIndex].r = 255;
-			mParticlesContainer[particleIndex].g = 255;
-			mParticlesContainer[particleIndex].b = 255;
-			mParticlesContainer[particleIndex].a = 255;
-
-			mParticlesContainer[particleIndex].size = 0.05f;
-		}
+		int particleIndex = FindUnusedParticle();
+		mParticlesContainer[particleIndex] = EmitRainParticle(mParticlesContainer[particleIndex]);
+	}
 
 		glm::vec3 CameraPosition = mCamera->GetCameraPosition();
 		// Simulate all particles
@@ -98,11 +78,12 @@ void RainEffect::Update(float dt){
 				p.life -= dt;
 				if (p.life > 0.0f){
 
-					// Simulate simple physics : gravity only, no collisions
+					mParticlesContainer[i] = UpdateRainParticle(mParticlesContainer[i],dt);
+
+					/*// Simulate simple physics : gravity only, no collisions
 					p.velocity += glm::vec3(0.0f,-9.81f, 0.0f) * (float)dt * 0.5f;
 					p.position += p.velocity * (float)dt;
-					p.cameradistance = glm::length2( p.position - CameraPosition );
-					//ParticlesContainer[i].pos += glm::vec3(0.0f,10.0f, 0.0f) * (float)delta;
+					p.cameradistance = glm::length2( p.position - CameraPosition );*/
 
 					// Fill the GPU buffer
 					mPositionSizeData[4*ParticlesCount+0] = p.position.x;
@@ -211,7 +192,6 @@ void RainEffect::Draw(){
 
 }
 
-
 void RainEffect::SortParticles(){
 	std::sort(mParticlesContainer.begin(), mParticlesContainer.end());
 }
@@ -233,3 +213,34 @@ int RainEffect::FindUnusedParticle(){
 
 	return 0; // if all particles are taken, override the first one
 }
+
+Particle RainEffect::EmitRainParticle(Particle p){
+	p.life = 5.0f; // This particle will live 5 seconds.
+	p.position = mCamera->GetCameraPosition() + glm::vec3(0,20,-2.0f);
+
+	float spread = 10.5f;
+			
+	glm::vec3 maindir	= glm::vec3(0.0f, -1.0f, 0.0f);
+			
+	glm::vec3 randomdir = glm::vec3( (rand()%2000 - 1000.0f)/1000.0f,
+									 (rand()%2000 - 1000.0f)/1000.0f,
+									 (rand()%2000 - 1000.0f)/1000.0f );
+
+	p.velocity = maindir + randomdir*spread;
+
+	p.r = 255;
+	p.g = 255;
+	p.b = 255;
+	p.a = 255;
+
+	p.size = 0.05f;
+	return p;
+}
+
+Particle RainEffect::UpdateRainParticle(Particle p, float dt){
+	p.velocity += glm::vec3(0.0f,-9.81f, 0.0f) * (float)dt * 0.5f;
+	p.position += p.velocity * (float)dt;
+	p.cameradistance = glm::length2( p.position - mCamera->GetCameraPosition());
+	return p;
+}
+
