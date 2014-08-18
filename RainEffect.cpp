@@ -4,7 +4,7 @@
 #include "Renderer.h"
 #include <GL/glew.h>
 
-using namespace glm;
+//using namespace glm;
 
 RainEffect::RainEffect(Camera* cam){
 	mCamera = cam;
@@ -64,7 +64,7 @@ void RainEffect::Update(float dt){
 		mParticlesContainer[particleIndex] = EmitRainParticle(mParticlesContainer[particleIndex]);
 	}
 
-		glm::vec3 CameraPosition = mCamera->GetCameraPosition();
+		glm::vec3 CameraPosition = mCamera->GetPosition();
 		// Simulate all particles
 		ParticlesCount = 0;
 
@@ -128,9 +128,9 @@ void RainEffect::Draw(){
 
 
 	// Vertex shader
-	GLuint CameraRight_worldspace_ID  = glGetUniformLocation(Renderer::GetShaderProgramID(), "CameraRight_worldspace");
-	GLuint CameraUp_worldspace_ID  = glGetUniformLocation(Renderer::GetShaderProgramID(), "CameraUp_worldspace");
-	GLuint ViewProjMatrixID = glGetUniformLocation(Renderer::GetShaderProgramID(), "VP");
+	GLuint CameraRight_worldspace_ID  = glGetUniformLocation(Renderer::getShader(), "CameraRight_worldspace");
+	GLuint CameraUp_worldspace_ID  = glGetUniformLocation(Renderer::getShader(), "CameraUp_worldspace");
+	GLuint ViewProjMatrixID = glGetUniformLocation(Renderer::getShader(), "VP");
 
 	glm::mat4 ViewMatrix = mCamera->GetViewMatrix();
 	glm::mat4 ViewProjectionMatrix = mCamera->GetViewProjectionMatrix();
@@ -159,8 +159,8 @@ void RainEffect::Draw(){
 	glBufferData(GL_ARRAY_BUFFER, mMaxParticles * 4 * sizeof(GLubyte), NULL, GL_STREAM_DRAW); // Buffer orphaning, a common way to improve streaming perf. See above link for details.
 	glBufferSubData(GL_ARRAY_BUFFER, 0, ParticlesCount * sizeof(GLubyte) * 4, mColorData);
 
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	/*glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);*/
 	
 	
 	// 1rst attribute buffer : vertices
@@ -237,7 +237,7 @@ int RainEffect::FindUnusedParticle(){
 
 Particle RainEffect::EmitRainParticle(Particle p){
 	p.life = 3.0f; // This particle will live 5 seconds.
-	p.position = mCamera->GetCameraPosition() + glm::vec3(0, 8, 0.0f);
+	p.position = mCamera->GetPosition() + glm::vec3(0, 8, 0.0f);
 
 	float spread = 10.5f;
 			
@@ -261,7 +261,7 @@ Particle RainEffect::EmitRainParticle(Particle p){
 Particle RainEffect::UpdateRainParticle(Particle p, float dt){
 	p.velocity += glm::vec3(0.0f,-18.81f, 0.0f) * (float)dt * 0.5f;
 	p.position += p.velocity * (float)dt;
-	p.cameradistance = glm::length2( p.position - mCamera->GetCameraPosition());
+	p.cameradistance = glm::length2( p.position - mCamera->GetPosition());
 	return p;
 }
 

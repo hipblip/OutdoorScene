@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Model.h"
+
 #include <gl\GL.h>
 #include "Particle.h"
 #include "Camera.h"
@@ -8,7 +9,7 @@
 #include <glm\glm.hpp>
 
 
-using namespace glm;
+//using namespace glm;
 
 class RainEffect{
 public:
