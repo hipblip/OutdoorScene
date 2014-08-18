@@ -16,7 +16,7 @@ RainEffect::RainEffect(Camera* cam){
 		mParticlesContainer[i].cameradistance = -1.0f;
 	}
 
-	mPositionSizeData		  = new GLfloat[mMaxParticles * 4];
+	/*mPositionSizeData		  = new GLfloat[mMaxParticles * 4];
 	mColorData				  = new GLubyte[mMaxParticles * 4];
 	// Create Vertex Buffer for all the verices of the Cube
 	
@@ -27,7 +27,6 @@ RainEffect::RainEffect(Camera* cam){
 
 	// Create a vertex array
 	glGenVertexArrays(1, &mVertexArrayID);
-	glBindVertexArray(mVertexArrayID);
 
 	// Upload Vertex Buffer to the GPU, keep a reference to it (mVertexBufferID)
 	glGenBuffers(1, &mVertexBuffer);
@@ -42,7 +41,7 @@ RainEffect::RainEffect(Camera* cam){
 	glGenBuffers(1, &mColorBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, mColorBuffer);
 	// Initialize with empty (NULL) buffer : it will be updated later, each frame.
-	glBufferData(GL_ARRAY_BUFFER, mMaxParticles * 4 * sizeof(GLubyte), NULL, GL_STREAM_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, mMaxParticles * 4 * sizeof(GLubyte), NULL, GL_STREAM_DRAW);*/
 
 }
 
@@ -110,8 +109,21 @@ void RainEffect::Update(float dt){
 }
 
 void RainEffect::Draw(){
-	Renderer::SetShader(SHADER_PARTICLE);
-	glUseProgram(Renderer::GetShaderProgramID());
+
+
+	mPositionSizeData		  = new GLfloat[mMaxParticles * 4];
+	mColorData				  = new GLubyte[mMaxParticles * 4];
+	// Create Vertex Buffer for all the verices of the Cube
+	
+	GLfloat vertexBufferData[] = { -0.5f, -0.5f, 0.0f,
+									0.5f, -0.5f, 0.0f,
+								   -0.5f,  0.5f, 0.0f,
+									0.5f,  0.5f, 0.0f };
+
+	// Create a vertex array
+	glGenVertexArrays(1, &mVertexArrayID);
+	glBindVertexArray(mVertexArrayID);
+
 
 	// Vertex shader
 	GLuint CameraRight_worldspace_ID  = glGetUniformLocation(Renderer::GetShaderProgramID(), "CameraRight_worldspace");
@@ -121,17 +133,26 @@ void RainEffect::Draw(){
 	glm::mat4 ViewMatrix = mCamera->GetViewMatrix();
 	glm::mat4 ViewProjectionMatrix = mCamera->GetViewProjectionMatrix();
 
+
 	// Same as the billboards tutorial
 	glUniform3f(CameraRight_worldspace_ID, ViewMatrix[0][0], ViewMatrix[1][0], ViewMatrix[2][0]);
 	glUniform3f(CameraUp_worldspace_ID   , ViewMatrix[0][1], ViewMatrix[1][1], ViewMatrix[2][1]);
-
 	glUniformMatrix4fv(ViewProjMatrixID, 1, GL_FALSE, &ViewProjectionMatrix[0][0]);
 
-	
+
+	// Upload Vertex Buffer to the GPU, keep a reference to it (mVertexBufferID)
+	glGenBuffers(1, &mVertexBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexBufferData), vertexBufferData, GL_STATIC_DRAW);
+
+
+	glGenBuffers(1, &mPositionBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, mPositionBuffer);
 	glBufferData(GL_ARRAY_BUFFER, mMaxParticles * 4 * sizeof(GLfloat), NULL, GL_STREAM_DRAW); // Buffer orphaning, a common way to improve streaming perf. See above link for details.
 	glBufferSubData(GL_ARRAY_BUFFER, 0, ParticlesCount * sizeof(GLfloat) * 4, mPositionSizeData);
 
+
+	glGenBuffers(1, &mColorBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, mColorBuffer);
 	glBufferData(GL_ARRAY_BUFFER, mMaxParticles * 4 * sizeof(GLubyte), NULL, GL_STREAM_DRAW); // Buffer orphaning, a common way to improve streaming perf. See above link for details.
 	glBufferSubData(GL_ARRAY_BUFFER, 0, ParticlesCount * sizeof(GLubyte) * 4, mColorData);
@@ -184,11 +205,10 @@ void RainEffect::Draw(){
 		//glDrawArraysInstanced(GL_TRIANGLE_STRIP,0, 4, ParticlesCount);
 		glDrawArraysInstanced(GL_POINTS, 0, 4, ParticlesCount);
 
-		glDisableVertexAttribArray(0);
-		glDisableVertexAttribArray(1);
 		glDisableVertexAttribArray(2);
+		glDisableVertexAttribArray(1);
+		glDisableVertexAttribArray(0);
 
-		Renderer::SetShader(SHADER_SOLID_COLOR);
 
 }
 
