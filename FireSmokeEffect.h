@@ -16,14 +16,16 @@ public:
 	FireSmokeEffect(Camera* cam);
 	~FireSmokeEffect();
 
-	void Update(float dt);
+	void Update(float dt, bool wind);
 	void Draw();
+
+	void SetCamera(Camera* cam);
 
 	void SortParticles();
 	int  FindUnusedParticle();
 
 	Particle EmitFireSmokeParticle(Particle p);
-	Particle UpdateFireSmokeParticle(Particle p, float dt);
+	Particle UpdateFireSmokeParticle(Particle p, float dt, bool wind);
 
 private:
 

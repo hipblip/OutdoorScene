@@ -53,7 +53,7 @@ RainEffect::~RainEffect(){
 	glDeleteVertexArrays(1, &mVertexArrayID);
 }
 
-void RainEffect::Update(float dt){
+void RainEffect::Update(float dt, bool wind){
 
 	int newparticles = (int)(dt*400);
 	if (newparticles > (int)(0.016f*400))
@@ -81,7 +81,7 @@ void RainEffect::Update(float dt){
 				p.life -= dt;
 				if (p.life > 0.0f){
 
-					mParticlesContainer[i] = UpdateRainParticle(mParticlesContainer[i],dt);
+					mParticlesContainer[i] = UpdateRainParticle(mParticlesContainer[i],dt, bool wind);
 
 					// Fill the GPU buffer
 					mPositionSizeData[4*ParticlesCount+0] = p.position.x;
@@ -252,10 +252,18 @@ Particle RainEffect::EmitRainParticle(Particle p){
 	return p;
 }
 
-Particle RainEffect::UpdateRainParticle(Particle p, float dt){
-	p.velocity += glm::vec3(0.0f,-18.81f, 0.0f) * (float)dt * 0.5f;
+Particle RainEffect::UpdateRainParticle(Particle p, float dt, bool wind){
+	
+	if (wind){
+        p.velocity += glm::vec3(-6.0f, -9.81f, 0.0f) * (float)dt * 0.5f;
+    }else{
+        p.velocity += glm::vec3(0.0f, -9.81f, 0.0f) * (float)dt * 0.5f;
+    }
 	p.position += p.velocity * (float)dt;
 	p.cameradistance = glm::length2( p.position - mCamera->GetPosition());
 	return p;
 }
 
+void RainEffect::SetCamera(Camera* cam){
+	mCamera = cam;
+}

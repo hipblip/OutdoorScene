@@ -17,14 +17,16 @@ public:
 	RainEffect(Camera* cam);
 	~RainEffect();
 
-	void Update(float dt);
+	void Update(float dt, bool wind);
 	void Draw();
 
 	void SortParticles();
 	int  FindUnusedParticle();
 
+	void SetCamera(Camera* cam);
+
 	Particle EmitRainParticle(Particle p);
-	Particle UpdateRainParticle(Particle p, float dt);
+	Particle UpdateRainParticle(Particle p, float dt, bool wind);
 
 private:
 

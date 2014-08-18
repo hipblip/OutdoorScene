@@ -54,7 +54,7 @@ FireEffect::~FireEffect(){
 	glDeleteVertexArrays(1, &mVertexArrayID);
 }
 
-void FireEffect::Update(float dt){
+void FireEffect::Update(float dt, bool wind){
 
 	int newparticles = (int)(dt * 1000);
 	if (newparticles > (int)(0.016f * 1000))
@@ -82,7 +82,7 @@ void FireEffect::Update(float dt){
 			p.life -= dt;
 			if (p.life > 0.0f){
 
-				mParticlesContainer[i] = UpdateFireParticle(mParticlesContainer[i], dt);
+				mParticlesContainer[i] = UpdateFireParticle(mParticlesContainer[i], dt, bool wind);
 
 				// Fill the GPU buffer
 				mPositionSizeData[4 * ParticlesCount + 0] = p.position.x;
@@ -260,8 +260,13 @@ Particle FireEffect::EmitFireParticle(Particle p){
 	return p;
 }
 
-Particle FireEffect::UpdateFireParticle(Particle p, float dt){
-	p.velocity += 0.01f * (glm::vec3(0.0f, 4.0f, 0.0f) * (float)dt * 0.5f);
+Particle FireEffect::UpdateFireParticle(Particle p, float dt, bool wind){
+	if (wind){
+        p.velocity += 0.01f * (glm::vec3(-3.0f, 4.0f, 0.0f) * (float)dt * 0.5f);
+    }else{
+        p.velocity += 0.01f * (glm::vec3(0.0f, 4.0f, 0.0f) * (float)dt * 0.5f);
+    }
+	
 	p.position += p.velocity * (float)dt;
 	p.cameradistance = glm::length2(p.position - mCamera->GetCameraPosition());
 	/*
@@ -292,3 +297,6 @@ Particle FireEffect::UpdateFireParticle(Particle p, float dt){
 	return p;
 }
 
+void FireEffect::SetCamera(Camera* cam){
+	mCamera = cam;
+}

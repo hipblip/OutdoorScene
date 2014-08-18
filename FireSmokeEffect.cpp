@@ -54,7 +54,7 @@ FireSmokeEffect::~FireSmokeEffect(){
 	glDeleteVertexArrays(1, &mVertexArrayID);
 }
 
-void FireSmokeEffect::Update(float dt){
+void FireSmokeEffect::Update(float dt, bool wind){
 
 	int newparticles = (int)(dt*500);
 		if (newparticles > (int)(0.016f*500))
@@ -82,7 +82,7 @@ void FireSmokeEffect::Update(float dt){
 				p.life -= dt;
 				if (p.life > 0.0f){
 
-					mParticlesContainer[i] = UpdateFireSmokeParticle(mParticlesContainer[i],dt);
+					mParticlesContainer[i] = UpdateFireSmokeParticle(mParticlesContainer[i],dt, bool wind);
 
 					/*// Simulate simple physics : gravity only, no collisions
 					p.velocity += glm::vec3(0.0f,-9.81f, 0.0f) * (float)dt * 0.5f;
@@ -260,8 +260,14 @@ Particle FireSmokeEffect::EmitFireSmokeParticle(Particle p){
 	return p;
 }
 
-Particle FireSmokeEffect::UpdateFireSmokeParticle(Particle p, float dt){
-	p.velocity += 0.01f * glm::vec3(0.0f, 1.0f, 0.0f) * (float)dt * 0.5f;
+Particle FireSmokeEffect::UpdateFireSmokeParticle(Particle p, float dt, bool wind){
+	
+	if (wind){
+        p.velocity += 0.01f * glm::vec3(-100.0f, 1.0f, 0.0f) * (float)dt * 0.5f;
+    }else{
+        p.velocity += 0.01f * glm::vec3(0.0f, 1.0f, 0.0f) * (float)dt * 0.5f;
+    }
+
 	p.position += p.velocity * (float)dt;
 	p.cameradistance = glm::length2( p.position - mCamera->GetCameraPosition());
 
@@ -302,3 +308,6 @@ Particle FireSmokeEffect::UpdateFireSmokeParticle(Particle p, float dt){
 	return p;
 }
 
+void FireSmokeEffect::SetCamera(Camera* cam){
+	mCamera = cam;
+}
