@@ -14,7 +14,7 @@
 class FirstPersonCamera : public Camera
 {
 public:
-	FirstPersonCamera(glm::vec3 position);
+	FirstPersonCamera(glm::vec3 position, Ground* inGround);
 	virtual ~FirstPersonCamera();
 
 	virtual void Update(float dt);
@@ -32,9 +32,6 @@ public:
 	virtual bool CheckSquareCollision() const;
 
 private:
-	// @TODO 3 - Add every parameter you need for a first person camera
-	//           including the speed of the camera
-
 	//Assignment 1 original variables
 	glm::vec3 mLookAt;
 	glm::vec3 mPosition;	
@@ -52,6 +49,6 @@ private:
 	float jumpTime;				//Time being calculated as of the initiation of the jump
 	float camRadius;			//Distance maitained by the camera when dealing with circular objects
 	float headBob;				//Maitains time of movement in order to generate the headbob
-
+	float groundHeight;			//Average Heigth of nearby ground
 	
 };

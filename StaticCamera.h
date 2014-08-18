@@ -15,7 +15,7 @@
 class StaticCamera : public Camera
 {
 public:
-	StaticCamera(glm::vec3 position, glm::vec3 lookAtPoint, glm::vec3 upVector);
+	StaticCamera(glm::vec3 position, glm::vec3 lookAtPoint, glm::vec3 upVector, Ground* inGround);
 	virtual ~StaticCamera();
 
 	virtual void Update(float dt);
@@ -34,5 +34,7 @@ private:
 	//Added Atributes
 	float movement;
 	float modifier;
+	bool camFlag;
 	float radius;
+	float groundHeight;
 };
