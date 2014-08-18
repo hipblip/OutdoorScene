@@ -55,9 +55,9 @@ RainEffect::~RainEffect(){
 
 void RainEffect::Update(float dt){
 
-	int newparticles = (int)(dt*700);
-		if (newparticles > (int)(0.016f*700))
-			newparticles = (int)(0.016f*700);
+	int newparticles = (int)(dt*400);
+	if (newparticles > (int)(0.016f*400))
+			newparticles = (int)(0.016f*400);
 		
 	for(int i=0; i<newparticles; i++){
 		int particleIndex = FindUnusedParticle();
@@ -67,6 +67,10 @@ void RainEffect::Update(float dt){
 		glm::vec3 CameraPosition = mCamera->GetCameraPosition();
 		// Simulate all particles
 		ParticlesCount = 0;
+
+		mPositionSizeData		  = new GLfloat[mMaxParticles * 4];
+		mColorData				  = new GLubyte[mMaxParticles * 4];
+
 		for(int i=0; i<mMaxParticles; i++){
 
 			Particle& p = mParticlesContainer[i]; // shortcut
@@ -111,8 +115,6 @@ void RainEffect::Update(float dt){
 void RainEffect::Draw(){
 
 
-	mPositionSizeData		  = new GLfloat[mMaxParticles * 4];
-	mColorData				  = new GLubyte[mMaxParticles * 4];
 	// Create Vertex Buffer for all the verices of the Cube
 	
 	GLfloat vertexBufferData[] = { -0.5f, -0.5f, 0.0f,
@@ -209,7 +211,6 @@ void RainEffect::Draw(){
 		glDisableVertexAttribArray(1);
 		glDisableVertexAttribArray(0);
 
-
 }
 
 void RainEffect::SortParticles(){
@@ -235,8 +236,8 @@ int RainEffect::FindUnusedParticle(){
 }
 
 Particle RainEffect::EmitRainParticle(Particle p){
-	p.life = 5.0f; // This particle will live 5 seconds.
-	p.position = mCamera->GetCameraPosition() + glm::vec3(0,20,-2.0f);
+	p.life = 3.0f; // This particle will live 5 seconds.
+	p.position = mCamera->GetCameraPosition() + glm::vec3(0, 8, 0.0f);
 
 	float spread = 10.5f;
 			
@@ -258,7 +259,7 @@ Particle RainEffect::EmitRainParticle(Particle p){
 }
 
 Particle RainEffect::UpdateRainParticle(Particle p, float dt){
-	p.velocity += glm::vec3(0.0f,-9.81f, 0.0f) * (float)dt * 0.5f;
+	p.velocity += glm::vec3(0.0f,-18.81f, 0.0f) * (float)dt * 0.5f;
 	p.position += p.velocity * (float)dt;
 	p.cameradistance = glm::length2( p.position - mCamera->GetCameraPosition());
 	return p;
