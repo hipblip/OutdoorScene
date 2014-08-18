@@ -83,11 +83,6 @@ void RainEffect::Update(float dt){
 
 					mParticlesContainer[i] = UpdateRainParticle(mParticlesContainer[i],dt);
 
-					/*// Simulate simple physics : gravity only, no collisions
-					p.velocity += glm::vec3(0.0f,-9.81f, 0.0f) * (float)dt * 0.5f;
-					p.position += p.velocity * (float)dt;
-					p.cameradistance = glm::length2( p.position - CameraPosition );*/
-
 					// Fill the GPU buffer
 					mPositionSizeData[4*ParticlesCount+0] = p.position.x;
 					mPositionSizeData[4*ParticlesCount+1] = p.position.y;
@@ -113,7 +108,6 @@ void RainEffect::Update(float dt){
 }
 
 void RainEffect::Draw(){
-
 
 	// Create Vertex Buffer for all the verices of the Cube
 	
